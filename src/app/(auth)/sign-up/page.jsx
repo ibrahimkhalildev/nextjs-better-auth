@@ -27,7 +27,7 @@ const SignUpPage = () => {
     console.log(resData, error)
   }
   return (
-    <div>
+    <div className='container mx-auto'>
       <h2>Please SignUp</h2>
       <Form className='flex w-96 flex-col gap-4' onSubmit={onSubmit}>
         <TextField
