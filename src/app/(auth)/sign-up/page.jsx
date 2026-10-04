@@ -1,6 +1,6 @@
 'use client'
-
 import React from 'react'
+import { Eye, EyeSlash } from '@gravity-ui/icons'
 import {
   Button,
   Description,
@@ -8,9 +8,10 @@ import {
   Form,
   Input,
   Label,
-  TextField
+  TextField,
+  InputGroup
 } from '@heroui/react'
-import { signUp } from '@/lib/auth-client'
+import { signIn, signUp } from '@/lib/auth-client'
 
 const SignUpPage = () => {
   const onSubmit = async e => {
@@ -25,6 +26,13 @@ const SignUpPage = () => {
       password: data.password
     })
     console.log(resData, error)
+  }
+
+  const handleGoogleSingIn = async () => {
+    const resData = await signIn.social({
+      provider: 'google'
+    })
+    console.log('After google sign in', resData)
   }
   return (
     <div className='container mx-auto'>
@@ -84,6 +92,7 @@ const SignUpPage = () => {
           </Description>
           <FieldError />
         </TextField>
+
         <div className='flex gap-2'>
           <Button type='submit'>
             {/* <Check /> */}
@@ -94,6 +103,8 @@ const SignUpPage = () => {
           </Button>
         </div>
       </Form>
+      <p>OR</p>
+      <Button onClick={handleGoogleSingIn}>Sign in with Googel</Button>
     </div>
   )
 }
