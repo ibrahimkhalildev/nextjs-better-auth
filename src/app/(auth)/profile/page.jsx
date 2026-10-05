@@ -1,6 +1,9 @@
 'use client'
 
+import { updateUser } from '@/lib/auth-client'
+
 import { FloppyDisk } from '@gravity-ui/icons'
+
 import {
   Button,
   Description,
@@ -10,25 +13,58 @@ import {
   Form,
   Input,
   Label,
-  TextArea,
-  TextField
+  TextField,
+  toast
 } from '@heroui/react'
 
 export default function ProfilePage () {
-  const handleUpdateUser = e => {
+  const handleUpdateUser = async e => {
     e.preventDefault()
+
+    // Form data collect
     const formData = new FormData(e.currentTarget)
-    const userData = Object.fromEntires(from )
+
+    // FormData → Object
+    const userData = Object.fromEntries(formData.entries())
 
     console.log('in the form data ', userData)
-    // alert('Form submitted successfully!')
+
+    try {
+      // Better Auth দিয়ে user update
+      const resData = await updateUser({
+        name: userData.name
+      })
+
+      console.log('after profile update ', resData)
+
+      // Success toast
+      toast.success('Profile updated successfully', {
+        description: 'Your profile information has been updated.'
+      })
+    } catch (error) {
+      console.log('Profile update error ', error)
+
+      // Error toast
+      toast.danger('Profile update failed', {
+        description: 'Something went wrong. Please try again.'
+      })
+    }
   }
 
   return (
-    <Form className='w-full max-w-96' onSubmit={() => handleUpdateUser}>
+    <Form
+      className='w-full max-w-96'
+      onSubmit={handleUpdateUser}
+    >
       <Fieldset>
-        <Fieldset.Legend>Profile Settings</Fieldset.Legend>
-        <Description>Update your profile information.</Description>
+        <Fieldset.Legend>
+          Profile Settings
+        </Fieldset.Legend>
+
+        <Description>
+          Update your profile information.
+        </Description>
+
         <FieldGroup>
           <TextField
             isRequired
@@ -42,17 +78,23 @@ export default function ProfilePage () {
             }}
           >
             <Label>Name</Label>
+
             <Input placeholder='John Doe' />
+
             <FieldError />
           </TextField>
-
         </FieldGroup>
+
         <Fieldset.Actions>
           <Button type='submit'>
             <FloppyDisk />
             Save changes
           </Button>
-          <Button type='reset' variant='secondary'>
+
+          <Button
+            type='reset'
+            variant='secondary'
+          >
             Cancel
           </Button>
         </Fieldset.Actions>
